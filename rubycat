@@ -1,0 +1,72 @@
+#!/usr/local/bin/ruby -w
+# rubycat -- open a file and print it out using ruby
+
+#add any needed libraries or modules
+require 'getoptlong'
+
+
+
+#initialize any variables. Remember that $ indicates a global, @
+#indicate and instance of a class, @@ indicates the class itself, and
+#all other variables are figured out from context 
+
+
+###Set up defaults for $filein and $fileout
+
+$filein = $stdin;
+$fileout = $stdout;
+
+###Make a USAGE string
+
+usage = "\nVersion: 1.0\nUsage: $0 [-f input_filename] [-o output_filename]
+In the absense of one or both of the arguments,
+stdin or stdout will be substituted.\n\n"
+
+###process the options
+
+begin
+  opts = GetoptLong.new(
+                        [ "--in",      "-f",       GetoptLong::REQUIRED_ARGUMENT ],
+                        [ "--out",     "-o",       GetoptLong::REQUIRED_ARGUMENT ],
+                        [ "--version",             GetoptLong::NO_ARGUMENT ],
+                        [ "--help",    "-h", "-?", GetoptLong::NO_ARGUMENT ]
+                        )
+
+  opts.each do |opt, arg|
+    case opt
+    when "--in" then $fileinname = arg
+    when "--out" then $fileoutname = arg
+    ###If --help, --version, -h or -? is called, print usage and exit
+    when "--version", "--help"
+      print usage
+      exit
+    else
+      print "Illegal command: #{inputLine}"
+    end
+  end
+
+rescue GetoptLong::MissingArgument
+  $stderr.print "Missing Argument\n"
+  exit
+end
+
+#open the two files with error checking
+
+begin
+  $filein = File.open($fileinname, "r") if defined? $fileinname
+  $fileout = File.open($fileoutname, "w") if defined? $fileoutname
+
+rescue SystemCallError
+  $stderr.print "IO failed: " + $!
+  $filein.close
+  $fileout.close
+  raise
+end
+
+###loop over the file, reading a line from $filein and spitting it out
+###to $fileout
+
+$filein.each {|line| $fileout.print line}
+
+$filein.close
+$fileout.close

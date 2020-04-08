@@ -1,0 +1,71 @@
+#! /usr/bin/env python
+
+# Pycat - a skeleton.
+# Requirements:
+# 1. Must take a stream of data, either from a file, or STDIN, and redirect
+# it to another file, or STDOUT.
+# 2. Must take parameters via the commandline: -f filein, for the
+#  input file, -o fileout for the output file, -v to print the version,
+#  and -h to print the version and a Usage statement. The usage
+#  statement should be a complete manual.
+# 3. Must have a basic filter capability: given a regexp, only matching lines
+# should be able to pass through.
+#
+# test cases: 
+# 1. "cat /etc/printcap | pycat" should produce the printcap file
+# 2. "cat /etc/printcap | pycat -v" should produce only the version string,
+#    ignoring the attempted input
+# 3. pycat -f /etc/printcap" should produce the same as 1 or "cat /etc/printcap"
+# 4. pycat -h should print a usage message
+# 5. pycat -f /etc/printcap -o /tmp/printcarp should produce a copy of
+# /etc/printcap into the file /etc/printcarp
+# 6. pycat -f /etc/printcap -r "^indust" should only print those lines beginning with "indust"
+# 7. Same as above, but with -nr (negate regexp) will print those lines NOT beginning with "indust"
+
+#init
+import sys
+import os
+import argparse
+import re
+import fileinput
+
+#set up options parser
+p = argparse.ArgumentParser()
+p.add_option("-f", "--inputfile", type="string", dest="infile", default="-")
+p.add_option("-o", "--outputfile", type="string", dest="outfile", default="-")
+p.add_option("-n", "--negate", action="store_true", dest="invert_re")
+p.add_option("-r", "--regexp", type="string", dest="regexp", default="")
+p.description="A simple file filter"
+#process options
+opt, args = p.parse_args()
+
+#first we have the no regexp option. No point in engaging the machinery if we aren't asking it to do anything
+if opt.regexp == "":
+    if opt.outfile == "-":
+        fileout = sys.stdout
+    else:
+        fileout = os.open(opt.outfile, os.O_WRONLY | os.O_CREAT)
+    #the fileinput module takes care of a lot of things for you. In particular,
+    #if you send it a '-' for a filename, it uses the stdin.
+    for line in fileinput.input(opt.infile):
+        fileout.write(line)
+    fileout.close()
+else:
+    #sadly, there is no matching fileoutput module. Maybe I missed it?
+    if opt.outfile == "-":
+        fileout = sys.stdout
+    else:
+        fileout = os.open(opt.outfile, os.O_WRONLY | os.O_CREAT)
+    #Okay, we can see our files, lets compile up the regexp and start
+    #looping over the lines
+    r=re.compile(opt.regexp)
+    for line in fileinput.input(opt.infile):
+        #is there a better way to invert the meaning of a search?
+        if opt.invert_re == True:
+            if r.search(line) == None:
+                fileout.write(line)
+        else:
+            if r.search(line) != None:
+                fileout.write(line)
+    fileout.close()
+sys.exit(0)
