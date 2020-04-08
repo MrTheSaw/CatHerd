@@ -31,37 +31,37 @@ import fileinput
 
 #set up options parser
 p = argparse.ArgumentParser()
-p.add_option("-f", "--inputfile", type="string", dest="infile", default="-")
-p.add_option("-o", "--outputfile", type="string", dest="outfile", default="-")
-p.add_option("-n", "--negate", action="store_true", dest="invert_re")
-p.add_option("-r", "--regexp", type="string", dest="regexp", default="")
+p.add_argument("-f", "--inputfile", type=str, dest="infile", default="-")
+p.add_argument("-o", "--outputfile", type=str, dest="outfile", default="-")
+p.add_argument("-n", "--negate", action='store_true', dest="invert_re")
+p.add_argument("-r", "--regexp", type=str, dest="regexp", default="")
 p.description="A simple file filter"
 #process options
-opt, args = p.parse_args()
+args = p.parse_args()
 
 #first we have the no regexp option. No point in engaging the machinery if we aren't asking it to do anything
-if opt.regexp == "":
-    if opt.outfile == "-":
+if args.regexp == "":
+    if args.outfile == "-":
         fileout = sys.stdout
     else:
-        fileout = os.open(opt.outfile, os.O_WRONLY | os.O_CREAT)
+        fileout = open(opt.outfile, "w")
     #the fileinput module takes care of a lot of things for you. In particular,
     #if you send it a '-' for a filename, it uses the stdin.
-    for line in fileinput.input(opt.infile):
+    for line in open(args.infile).readlines():
         fileout.write(line)
     fileout.close()
 else:
     #sadly, there is no matching fileoutput module. Maybe I missed it?
-    if opt.outfile == "-":
+    if args.outfile == "-":
         fileout = sys.stdout
     else:
-        fileout = os.open(opt.outfile, os.O_WRONLY | os.O_CREAT)
-    #Okay, we can see our files, lets compile up the regexp and start
-    #looping over the lines
-    r=re.compile(opt.regexp)
-    for line in fileinput.input(opt.infile):
+        fileout = open(args.outfile, "w")
+    # Okay, we can see our files, lets compile up the regexp and start
+    # looping over the lines
+    r=re.compile(args.regexp)
+    for line in fileinput.input(args.infile):
         #is there a better way to invert the meaning of a search?
-        if opt.invert_re == True:
+        if args.invert_re == True:
             if r.search(line) == None:
                 fileout.write(line)
         else:
