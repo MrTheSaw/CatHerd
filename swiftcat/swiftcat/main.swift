@@ -10,11 +10,6 @@
 import Foundation
 import ArgumentParser
 
-enum SwiftCatErrors: Error {
-    case File_Not_Found(filename: String)
-    case Unable_To_Create(filename: String)
-}
-
 struct Swiftcat: ParsableCommand {
     
     @Option(name: .shortAndLong, help: "Name of the input file, defaults to stdin")
