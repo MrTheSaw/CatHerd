@@ -89,17 +89,3 @@ struct Swiftcat: ParsableCommand {
 
 
 Swiftcat.main()
-
-var didIt: Bool = false
-var data = Data(repeatElement(0x41, count: 9))
-data.append(0x42)
-data.append(contentsOf: repeatElement(0x41, count: 5))
-print("1", String(bytes: data, encoding: .utf8))
-var line = data.prefix(while: {didIt = ($0 != 0x42); return didIt})
-data = data.dropFirst(line.count)
-line.append(data.popFirst()!)
-print("2l", String(bytes: line, encoding: .utf8))
-//print("3", data.popFirst())
-
-print("4d", String(bytes: data, encoding: .utf8))
-print("5", didIt ? "Yay" : "Nay")
