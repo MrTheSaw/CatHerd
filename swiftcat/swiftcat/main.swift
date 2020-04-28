@@ -4,7 +4,8 @@
 //
 //  Created by Hacksaw on 2020Apr27.
 //  Copyright © 2020 Hacksaw. All rights reserved.
-//
+//  MIT License (free to use but retain attributions)
+
 
 import Foundation
 import ArgumentParser

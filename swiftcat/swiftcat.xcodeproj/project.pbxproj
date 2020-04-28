@@ -28,6 +28,7 @@
 		AE084E312456A59400E91618 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		AE084E3D245818F800E91618 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		AE084E3E245818F800E91618 /* bigtest.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = bigtest.txt; sourceTree = "<group>"; };
+		AE084E4024582D2F00E91618 /* swiftcat.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = swiftcat.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 			children = (
 				AE084E3F2458190C00E91618 /* TestFiles */,
 				AE084E312456A59400E91618 /* main.swift */,
+				AE084E4024582D2F00E91618 /* swiftcat.md */,
 			);
 			path = swiftcat;
 			sourceTree = "<group>";
