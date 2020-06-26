@@ -4,11 +4,15 @@
 //
 //  Created by Hacksaw on 2020Apr27.
 //  Copyright © 2020 Hacksaw. All rights reserved.
-//  MIT License (free to use but retain attributions)
-
+//
 
 import Foundation
 import ArgumentParser
+
+enum SwiftCatErrors: Error {
+    case File_Not_Found(filename: String)
+    case Unable_To_Create(filename: String)
+}
 
 struct Swiftcat: ParsableCommand {
     
@@ -68,24 +72,27 @@ struct Swiftcat: ParsableCommand {
                 line.append(buffer.popFirst()!)
                 
                 //print(buffer.description)
+                
+                // Keep lines which match this...
                 if regexMatch != nil {
                     isGoodToGo = String(decoding: line, as: UTF8.self).range(of: regexMatch!, options: .regularExpression) != nil
                 }
+                
+                // ... unless they match this
                 if regexNoMatch != nil {
                     isGoodToGo = isGoodToGo && (String(decoding: line, as: UTF8.self).range(of: regexNoMatch!, options: .regularExpression) == nil)
                 }
+                
+                // whatever is left, we send
                 if isGoodToGo {
                     streamOut!.write(line)
                     line.removeAll()
-                } else {
-                    //reset for the next line
-                    isGoodToGo = true
                 }
+                //reset for the next line
+                isGoodToGo = true
             }
-            
         }
     }
 }
-
 
 Swiftcat.main()
