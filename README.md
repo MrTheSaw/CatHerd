@@ -16,7 +16,7 @@ These are the ones I've kept.
 
 You are welcome to submit your own for fun, assuming you are okay with the MIT license, i.e. free for whatever, but keep your attribution.
 
-These are best used as a skeleton for making file filters, in the tradition of Unix.
+These are best used as a skeleton for making file filters, in the tradition of Unix.
 
 ### Requirements
 
